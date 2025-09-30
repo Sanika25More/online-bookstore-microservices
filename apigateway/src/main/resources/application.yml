@@ -1,9 +1,11 @@
-server:
-  port: 9090   # API Gateway port
-
 spring:
   application:
     name: api-gateway
+  config:
+    import: optional:configserver:http://localhost:8889
+
+server:
+  port: 9090   # API Gateway port
 
   cloud:
     gateway:
