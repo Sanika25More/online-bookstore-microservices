@@ -1,0 +1,14 @@
+# Ignore all logs
+*.log
+
+# Ignore IntelliJ project files
+*.iml
+.idea/
+
+# Ignore Maven target folder except the JAR
+target/*
+!target/*.jar
+
+# Ignore any other unnecessary files
+*.class
+*.tmp
