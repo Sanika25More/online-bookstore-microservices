@@ -1,39 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Defines this module's relationship to the parent project -->
-    <parent>
-        <groupId>com.bookstore.microservices</groupId>
-        <artifactId>online-bookstore-microservices</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <!-- Explicitly point to the parent POM one level up -->
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+    <groupId>com.bookstore.microservices</groupId>
+    <artifactId>online-bookstore-microservices</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-    <artifactId>eureka-server</artifactId>
-    <name>Eureka Server</name>
-    <description>Spring Cloud Netflix Eureka Discovery Server</description>
-
-    <dependencies>
-        <!-- This is the crucial dependency for a Eureka Server -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-        </dependency>
-
-        <!-- Standard Spring Boot Web dependency -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!-- Standard Spring Boot Test dependency -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
+    <modules>
+        <module>config-server</module>
+        <module>eureka-server</module>
+        <module>user-service</module>
+        <module>book-service</module>
+        <module>order-service</module>
+        <module>payment-service</module>
+    </modules>
 </project>

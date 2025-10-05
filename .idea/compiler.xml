@@ -13,10 +13,10 @@
         <module name="user-service" />
         <module name="order-service" />
         <module name="eureka-server" />
+        <module name="online-bookstore-microservices (1)" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="online-bookstore-microservices" target="1.5" />
       <module name="user-service-dev.yml" target="17" />
     </bytecodeTargetLevel>
   </component>
