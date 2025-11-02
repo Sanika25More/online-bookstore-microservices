@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: optional:configserver:http://localhost:8889
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
