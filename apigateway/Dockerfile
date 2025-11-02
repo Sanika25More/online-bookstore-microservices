@@ -9,6 +9,10 @@ COPY target/*.jar app.jar
 
 # Expose API Gateway port
 EXPOSE 8765
+=======
+# Expose API Gateway port (change if your gateway runs on another port)
+EXPOSE 8080
+>>>>>>> 21fc9bf00c49eaec32a73e92d7fd59dfc7f37f59
 
 # Run the Spring Boot JAR
 ENTRYPOINT ["java", "-jar", "app.jar"]

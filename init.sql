@@ -1,14 +1,17 @@
+
 -- ============================================
 -- Online Bookstore Microservices Database Schema
 -- ============================================
 -- This file creates all databases and their schemas with sample data
 -- For Docker initialization, see mysql-init/ directory for individual files
 
+
 -- Create databases for all microservices
 CREATE DATABASE IF NOT EXISTS book_service_db;
 CREATE DATABASE IF NOT EXISTS user_service_db;
 CREATE DATABASE IF NOT EXISTS order_service_db;
 CREATE DATABASE IF NOT EXISTS payment_service_db;
+
 
 -- ============================================
 -- BOOK SERVICE DATABASE
@@ -153,3 +156,4 @@ INSERT INTO payments (order_id, amount, method, status, transaction_id, payment_
 (13, 25.98, 'UPI', 'SUCCESSFUL', 'TXN-20240124-001', '2024-01-24 12:31:00'),
 (14, 13.99, 'CREDIT_CARD', 'PROCESSING', 'TXN-20240125-001', '2024-01-25 14:01:00'),
 (15, 17.99, 'PAYPAL', 'PENDING', 'TXN-20240126-001', '2024-01-26 09:46:00');
+

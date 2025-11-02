@@ -69,6 +69,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
+
         <!-- Swagger/OpenAPI for API Gateway -->
         <dependency>
             <groupId>org.springdoc</groupId>
