@@ -2,7 +2,6 @@ package com.bookstore.order_service.controller;
 
 import com.bookstore.order_service.entity.Order;
 import com.bookstore.order_service.service.OrderService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,8 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/orders")
-
 @Tag(name = "Order Controller", description = "API endpoints for managing orders in the bookstore")
-
-
 public class OrderController {
 
     private final OrderService orderService;
@@ -31,32 +25,23 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-
     @Operation(summary = "Place a new order", description = "Create a new order for books in the bookstore")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Order placed successfully",
                     content = @Content(schema = @Schema(implementation = Order.class)))
     })
-
-    // Place a new order
-
     @PostMapping
     public Order createOrder(@RequestBody Order order) {
         return orderService.placeOrder(order);
     }
 
-
     @Operation(summary = "Get all orders", description = "Retrieve a list of all orders")
     @ApiResponse(responseCode = "200", description = "List of all orders",
             content = @Content(schema = @Schema(implementation = Order.class)))
-
-    // Get all orders
-
     @GetMapping
     public List<Order> getAllOrders() {
         return orderService.getAllOrders();
     }
-
 
     @Operation(summary = "Get order by ID", description = "Retrieve a specific order by its ID")
     @ApiResponses(value = {
@@ -100,29 +85,6 @@ public class OrderController {
     @DeleteMapping("/{id}")
     public void deleteOrder(
             @Parameter(description = "Order ID", required = true) @PathVariable Long id) {
-
-    // Get order by ID
-    @GetMapping("/{id}")
-    public Optional<Order> getOrderById(@PathVariable Long id) {
-        return orderService.getOrderById(id);
-    }
-
-    // Get all orders of a user
-    @GetMapping("/user/{userId}")
-    public List<Order> getOrdersByUser(@PathVariable Long userId) {
-        return orderService.getOrdersByUser(userId);
-    }
-
-    // Update order status
-    @PutMapping("/{id}/status")
-    public Order updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
-        return orderService.updateOrderStatus(id, status);
-    }
-
-    // Delete order (Cancel order)
-    @DeleteMapping("/{id}")
-    public void deleteOrder(@PathVariable Long id) {
-
         orderService.deleteOrder(id);
     }
 }
