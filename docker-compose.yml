@@ -47,7 +47,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
 
-  # --- DATABASE SERVICE ---
+  # --- DATABAERVICE ---
   mysql:
     image: mysql:8.0
     container_name: mysql

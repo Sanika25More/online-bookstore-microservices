@@ -2,7 +2,6 @@ package com.bookstore.book_service.controller;
 
 import com.bookstore.book_service.entity.Book;
 import com.bookstore.book_service.service.BookService;
-<<<<<<< HEAD
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,8 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/books")
-
 @Tag(name = "Book Controller", description = "API endpoints for managing books in the bookstore")
-
 public class BookController {
 
     @Autowired
@@ -45,28 +40,18 @@ public class BookController {
             @ApiResponse(responseCode = "200", description = "Book created successfully",
                     content = @Content(schema = @Schema(implementation = Book.class)))
     })
-
-    @PutMapping("/{id}/reduce-stock")
-    public Book reduceStock(@PathVariable Long id, @RequestParam int qty) {
-        return bookService.reduceStock(id, qty);
-    }
-
-
     @PostMapping
     public Book createBook(@RequestBody Book book) {
         return bookService.createBook(book);
     }
 
-
     @Operation(summary = "Get all books", description = "Retrieve a list of all books in the bookstore")
     @ApiResponse(responseCode = "200", description = "List of all books",
             content = @Content(schema = @Schema(implementation = Book.class)))
-
     @GetMapping
     public List<Book> getAllBooks() {
         return bookService.getAllBooks();
     }
-
 
     @Operation(summary = "Get book by ID", description = "Retrieve a specific book by its ID")
     @ApiResponses(value = {
@@ -77,15 +62,10 @@ public class BookController {
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(
             @Parameter(description = "Book ID", required = true) @PathVariable Long id) {
-    // Get book by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-
         return bookService.getBookById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
 
     @Operation(summary = "Update book", description = "Update an existing book's information")
     @ApiResponses(value = {
@@ -108,17 +88,6 @@ public class BookController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(
             @Parameter(description = "Book ID", required = true) @PathVariable Long id) {
-
-    // Update book
-    @PutMapping("/{id}")
-    public Book updateBook(@PathVariable Long id, @RequestBody Book book) {
-        return bookService.updateBook(id, book);
-    }
-
-    // Delete book
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
-
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }

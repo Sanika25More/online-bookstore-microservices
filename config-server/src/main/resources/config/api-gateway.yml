@@ -22,7 +22,7 @@ spring:
             - Path=/payments/**
 
 server:
-  port: 9090
+  port: 8765
 
 eureka:
   client:
