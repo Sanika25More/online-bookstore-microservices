@@ -9,7 +9,6 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
         DOCKER_HUB_REPO = "sani427"
-        IMAGE_NAME = "onlinebookstore"
     }
 
     stages {
@@ -27,54 +26,39 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build with Maven') {
             steps {
-                echo '⚙️ Building Project using Maven...'
+                echo '⚙️ Building all microservices...'
                 bat 'mvn clean package -DskipTests'
             }
         }
 
-        stage('Test') {
+        stage('Build & Push Docker Images') {
             steps {
-                echo '🧪 Running Unit Tests...'
-                bat 'mvn test'
-            }
-        }
+                script {
+                    def services = ['user-service', 'book-service', 'order-service', 'payment-service']
 
-        stage('Build Docker Image') {
-            steps {
-                echo '🐳 Building Docker Image...'
-                bat "docker build -t %DOCKER_HUB_REPO%/%IMAGE_NAME%:latest ."
-            }
-        }
+                    for (svc in services) {
+                        echo "🐳 Building Docker image for ${svc}..."
+                        dir(svc) {
+                            bat "docker build -t ${DOCKER_HUB_REPO}/${svc}:latest ."
+                        }
 
-        stage('Push Docker Image') {
-            steps {
-                echo '⬆️ Pushing Docker image to DockerHub...'
-
-                // ✅ First push (optional)
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    bat '''
-                        echo Logging into Docker Hub...
-                        echo %PASSWORD% | docker login -u %USERNAME% --password-stdin
-                        docker push sani427/online-bookstore:latest
-                    '''
-                }
-
-                // ✅ Second push (environment variables)
-                echo '📤 Pushing Docker Image to Docker Hub...'
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    bat """
-                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-                        docker push %DOCKER_HUB_REPO%/%IMAGE_NAME%:latest
-                    """
+                        echo "⬆️ Pushing ${svc} image to Docker Hub..."
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                            bat """
+                                echo %PASSWORD% | docker login -u %USERNAME% --password-stdin
+                                docker push ${DOCKER_HUB_REPO}/${svc}:latest
+                            """
+                        }
+                    }
                 }
             }
         }
 
         stage('Deploy (Optional)') {
             steps {
-                echo '🚀 Deployment stage (can be integrated with Kubernetes or Docker Compose).'
+                echo '🚀 You can integrate Kubernetes or Docker Compose here later.'
             }
         }
     }
@@ -84,10 +68,10 @@ pipeline {
             echo '📘 Pipeline completed (success or failure).'
         }
         success {
-            echo '✅ Pipeline executed successfully!'
+            echo '✅ All microservices built and pushed successfully!'
         }
         failure {
-            echo '❌ Pipeline failed. Please check the logs.'
+            echo '❌ Pipeline failed. Please check logs.'
         }
     }
 }
