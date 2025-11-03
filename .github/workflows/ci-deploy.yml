@@ -2,7 +2,8 @@ name: Docker Compose Deployment
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
     tags:
       - 'v*'
   workflow_dispatch:
@@ -23,18 +24,15 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build services
-        run: |
-          docker compose -f docker-compose.yml build
+        run: docker compose -f docker-compose.yml build
 
       - name: Start services
-        run: |
-          docker compose -f docker-compose.yml up -d
+        run: docker compose -f docker-compose.yml up -d
 
       - name: Health check
         run: |
           echo "Waiting for services to be healthy..."
           sleep 60
-          # Add health check commands
           docker compose ps
 
       - name: Run integration tests
@@ -44,6 +42,4 @@ jobs:
 
       - name: Stop services
         if: always()
-        run: |
-          docker compose -f docker-compose.yml down
-
+        run: docker compose -f docker-compose.yml down
