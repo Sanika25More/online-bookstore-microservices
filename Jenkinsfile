@@ -6,6 +6,13 @@ pipeline {
     }
 
     stages {
+        stage('Cleanup') {
+            steps {
+                echo '🧹 Cleaning workspace...'
+                cleanWs()
+            }
+        }
+
         stage('Checkout') {
             steps {
                 echo '📦 Cloning Repository...'
@@ -38,8 +45,11 @@ pipeline {
             steps {
                 echo '⬆️ Pushing Docker image to DockerHub...'
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    bat 'docker login -u %USERNAME% -p %PASSWORD%'
-                    bat 'docker push sani427/online-bookstore:latest'
+                    bat '''
+                        echo Logging into Docker Hub...
+                        echo %PASSWORD% | docker login -u %USERNAME% --password-stdin
+                        docker push sani427/online-bookstore:latest
+                    '''
                 }
             }
         }
