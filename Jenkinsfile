@@ -12,7 +12,6 @@ pipeline {
 
         DOCKER_HUB_REPO = "sani427"
         IMAGE_NAME = "onlinebookstore"
- (Add Jenkinsfile for CI/CD pipeline)
     }
 
     stages {
@@ -37,7 +36,6 @@ pipeline {
                 bat 'mvn clean package -DskipTests'
 
                 bat "mvn clean package -DskipTests"
- (Add Jenkinsfile for CI/CD pipeline)
             }
         }
 
@@ -49,7 +47,6 @@ pipeline {
 
                 echo '🧪 Running Unit Tests...'
                 bat "mvn test"
-(Add Jenkinsfile for CI/CD pipeline)
             }
         }
 
@@ -60,7 +57,6 @@ pipeline {
                 bat 'docker build -t sani427/online-bookstore:latest .'
                 echo '🐳 Building Docker Image...'
                 bat "docker build -t %DOCKER_HUB_REPO%/%IMAGE_NAME%:latest ."
- (Add Jenkinsfile for CI/CD pipeline)
             }
         }
 
@@ -81,7 +77,6 @@ pipeline {
                         echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
                         docker push %DOCKER_HUB_REPO%/%IMAGE_NAME%:latest
                     """
- (Add Jenkinsfile for CI/CD pipeline)
                 }
             }
         }
