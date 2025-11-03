@@ -24,33 +24,29 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Operation(summary = "Create a new user", description = "Register a new user in the bookstore system")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User created successfully",
-                    content = @Content(schema = @Schema(implementation = User.class)))
-    })
+    @Operation(summary = "Create a new user")
+    @ApiResponse(responseCode = "200", description = "User created successfully")
     @PostMapping
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
 
-    @Operation(summary = "Get all users", description = "Retrieve a list of all registered users")
-    @ApiResponse(responseCode = "200", description = "List of all users",
-            content = @Content(schema = @Schema(implementation = User.class)))
+    @Operation(summary = "Get all users")
+    @ApiResponse(responseCode = "200", description = "List of all users")
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @Operation(summary = "Get user by ID", description = "Retrieve a specific user's information by their ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User found",
-                    content = @Content(schema = @Schema(implementation = UserResponse.class))),
+    @Operation(summary = "Get user by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User found"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(
             @Parameter(description = "User ID", required = true) @PathVariable Long id) {
+
         return userService.getUserById(id)
                 .map(user -> new UserResponse(
                         user.getUserId(),
@@ -64,10 +60,9 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Update user", description = "Update an existing user's information")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User updated successfully",
-                    content = @Content(schema = @Schema(implementation = User.class))),
+    @Operation(summary = "Update user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User updated successfully"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @PutMapping("/{id}")
@@ -77,8 +72,8 @@ public class UserController {
         return userService.updateUser(id, user);
     }
 
-    @Operation(summary = "Delete user", description = "Delete a user from the system")
-    @ApiResponses(value = {
+    @Operation(summary = "Delete user")
+    @ApiResponses({
             @ApiResponse(responseCode = "204", description = "User deleted successfully"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
@@ -89,3 +84,4 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 }
+
