@@ -7,9 +7,7 @@ pipeline {
     }
 
     environment {
-
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-
         DOCKER_HUB_REPO = "sani427"
         IMAGE_NAME = "onlinebookstore"
     }
@@ -32,29 +30,19 @@ pipeline {
         stage('Build') {
             steps {
                 echo '⚙️ Building Project using Maven...'
-
                 bat 'mvn clean package -DskipTests'
-
-                bat "mvn clean package -DskipTests"
             }
         }
 
         stage('Test') {
             steps {
-
-                echo '🧪 Running Tests...'
-                bat 'mvn test'
-
                 echo '🧪 Running Unit Tests...'
-                bat "mvn test"
+                bat 'mvn test'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-
-                echo '🐳 Building Docker image...'
-                bat 'docker build -t sani427/online-bookstore:latest .'
                 echo '🐳 Building Docker Image...'
                 bat "docker build -t %DOCKER_HUB_REPO%/%IMAGE_NAME%:latest ."
             }
@@ -62,15 +50,18 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-
                 echo '⬆️ Pushing Docker image to DockerHub...'
+
+                // ✅ First push (optional)
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     bat '''
                         echo Logging into Docker Hub...
                         echo %PASSWORD% | docker login -u %USERNAME% --password-stdin
                         docker push sani427/online-bookstore:latest
                     '''
+                }
 
+                // ✅ Second push (environment variables)
                 echo '📤 Pushing Docker Image to Docker Hub...'
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     bat """
