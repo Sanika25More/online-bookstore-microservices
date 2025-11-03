@@ -2,55 +2,70 @@ pipeline {
     agent any
 
     environment {
-        COMPOSE_PROJECT_NAME = "bookstore"
-        DOCKER_COMPOSE_FILE = "docker-compose.yml"
+        MAVEN_HOME = "/usr/share/maven"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Sanika25More/online-bookstore-microservices.git'
+                echo 'Cloning Repository...'
+                git branch: 'main', url: 'https://github.com/Sanika25More/onlinebookstoremicroservices.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building with Maven...'
+                sh "mvn clean package -DskipTests"
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running Unit Tests...'
+                sh "mvn test"
             }
         }
 
         stage('Build Docker Images') {
             steps {
-                sh 'docker compose -f ${DOCKER_COMPOSE_FILE} build'
+                echo 'Building Docker Images for each microservice...'
+                script {
+                    def services = ["config-server", "discovery-server", "api-gateway", "book-service", "order-service", "user-service"]
+                    for (svc in services) {
+                        sh "docker build -t sani427/${svc}:latest -f ${svc}/Dockerfile ${svc}"
+                    }
+                }
             }
         }
 
-        stage('Start Containers') {
+        stage('Push Docker Images') {
             steps {
-                sh 'docker compose -f ${DOCKER_COMPOSE_FILE} up -d'
+                echo 'Pushing Docker Images to Docker Hub...'
+                script {
+                    def services = ["config-server", "discovery-server", "api-gateway", "book-service", "order-service", "user-service"]
+                    for (svc in services) {
+                        sh "docker push sani427/${svc}:latest"
+                    }
+                }
             }
         }
 
-        stage('Health Check') {
+        stage('Deploy to Minikube') {
             steps {
-                echo "Waiting for services to be healthy..."
-                sh 'sleep 30'
-                sh 'docker compose ps'
-            }
-        }
-
-        stage('Integration Tests') {
-            steps {
-                echo "Running integration tests..."
-                // Add test commands if available
+                echo 'Deploying all services to Minikube...'
+                sh "kubectl apply -f k8s/deployments/"
+                sh "kubectl apply -f k8s/services/"
             }
         }
     }
 
     post {
         success {
-            echo '✅ Pipeline completed successfully.'
+            echo '✅ Pipeline executed successfully!'
         }
         failure {
-            echo '❌ Pipeline failed.'
-        }
-        always {
-            echo '🧹 Cleaning up workspace'
-            sh 'docker compose -f ${DOCKER_COMPOSE_FILE} down --remove-orphans || true'
+            echo '❌ Pipeline failed. Please check the logs.'
         }
     }
 }
